@@ -57,3 +57,10 @@ config :kraal, Kraal.Repo,
   hostname: "localhost",
   port: 32770,
   pool_size: 10
+
+  config :guardian, Guardian,
+      issuer: "Kraal",
+      ttl: { 30, :days },
+      verify_issuer: true,
+      secret_key: "lksdjowiurowieurlkjsdlwwer",
+      serializer: Kraal.GuardianSerializer

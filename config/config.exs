@@ -7,7 +7,8 @@ use Mix.Config
 
 # General application configuration
 config :kraal,
-  ecto_repos: [Kraal.Repo]
+  ecto_repos: [Kraal.Repo],
+  generators: [binary_id: true]
 
 # Configures the endpoint
 config :kraal, Kraal.Web.Endpoint,
