@@ -1,0 +1,13 @@
+<h1>Użytkownik <%= @user.email %></h1>
+<ul>
+  <li>Email: <%= @user.email %></li>
+  <li>Aktywowany: <%= @user.activated %></li>
+  <li>Role:<ul>
+      <li>Admin: <%= @user.roles.admin %></li>
+      <li>Scoutmaster: <%= @user.roles.admin %></li>
+      <li>Blog writer: <%= @user.roles.admin %></li>
+  </ul></li>
+  <li>Stworzony: <%= @user.inserted_at %></li>
+  <li>OStatnia zmiana: <%= @user.updated_at %></li>
+</ul>
+<td><%= link "Edytuj", to: admin_user_path(@conn, :edit, @user.id) %><td>

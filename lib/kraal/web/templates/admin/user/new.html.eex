@@ -1,0 +1,4 @@
+<%= form_for @changeset, admin_user_path(@conn, :create), fn f -> %>
+  <%= email_input f, :email %> 
+  <%= submit "Stwórz" %>
+<% end %>

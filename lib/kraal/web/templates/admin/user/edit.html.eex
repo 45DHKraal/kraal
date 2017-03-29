@@ -1,0 +1,10 @@
+<%= form_for @changeset, admin_user_path(@conn, :update, @user.id), fn f -> %>
+  <%= email_input f, :email, disabled: true %>
+  <%= checkbox f, :activated %>
+  <%= inputs_for f, :roles, fn fp -> %>
+    <%= checkbox fp, :admin %>
+    <%= checkbox fp, :scoutmaster %>
+    <%= checkbox fp, :blog_writer %>
+  <% end %>
+  <%= submit "Zapisz" %>
+<% end %>

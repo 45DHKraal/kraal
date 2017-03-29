@@ -1,0 +1,12 @@
+<div>
+<%= link "Nowy użytkownik", to: admin_user_path(@conn, :new) %>
+</div>
+<table>
+  <%= for user <- @users do %>
+    <tr>
+      <td><%= user.email %><td>
+      <td><%= user.activated %><td>
+      <td><%= link "Podgląd", to: admin_user_path(@conn, :show, user.id) %><td>
+    </tr>
+  <% end %>
+</table>
