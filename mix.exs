@@ -17,7 +17,7 @@ defmodule Kraal.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Kraal.Application, []},
-     extra_applications: [:logger, :runtime_tools]]
+     extra_applications: [:logger, :bamboo, :runtime_tools]]
   end
 
   # Specifies which paths to compile per environment.
@@ -36,7 +36,9 @@ defmodule Kraal.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
-     {:guardian, github: "ueberauth/guardian"}]
+     {:guardian, github: "ueberauth/guardian"},
+     {:bamboo, "~> 0.8"}
+   ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

@@ -55,12 +55,15 @@ config :kraal, Kraal.Repo,
   password: "password",
   database: "kraal_dev",
   hostname: "localhost",
-  port: 32770,
+  port: 32768,
   pool_size: 10
 
-  config :guardian, Guardian,
-      issuer: "Kraal",
-      ttl: { 30, :days },
-      verify_issuer: true,
-      secret_key: "lksdjowiurowieurlkjsdlwwer",
-      serializer: Kraal.GuardianSerializer
+config :guardian, Guardian,
+  issuer: "Kraal",
+  ttl: { 30, :days },
+  verify_issuer: true,
+  secret_key: "lksdjowiurowieurlkjsdlwwer",
+  serializer: Kraal.GuardianSerializer
+
+config :kraal, Kraal.Mailer,
+  adapter: Bamboo.LocalAdapter

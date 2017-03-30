@@ -27,6 +27,13 @@ defmodule Kraal.Web.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/activate/:token/:user", ProfileController, :activate
+
+    scope "/profile" do
+      get "/", ProfileController, :show
+      get "/edit", ProfileController, :edit
+      post "/edit", ProfileController, :update
+    end
   end
 
   scope "/admin", Kraal.Web.Admin, as: :admin do
@@ -34,6 +41,9 @@ defmodule Kraal.Web.Router do
     resources "/users", UserController
   end
 
+  if Mix.env == :dev do
+    forward "/sent_emails", Bamboo.EmailPreviewPlug
+  end
   # Other scopes may use custom stacks.
   # scope "/api", Kraal.Web do
   #   pipe_through :api

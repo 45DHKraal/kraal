@@ -4,8 +4,8 @@
   <li>Aktywowany: <%= @user.activated %></li>
   <li>Role:<ul>
       <li>Admin: <%= @user.roles.admin %></li>
-      <li>Scoutmaster: <%= @user.roles.admin %></li>
-      <li>Blog writer: <%= @user.roles.admin %></li>
+      <li>Scoutmaster: <%= @user.roles.scoutmaster %></li>
+      <li>Blog writer: <%= @user.roles.blog_writer %></li>
   </ul></li>
   <li>Stworzony: <%= @user.inserted_at %></li>
   <li>OStatnia zmiana: <%= @user.updated_at %></li>

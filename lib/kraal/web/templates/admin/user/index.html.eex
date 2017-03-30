@@ -1,12 +1,27 @@
-<div>
-<%= link "Nowy użytkownik", to: admin_user_path(@conn, :new) %>
-</div>
-<table>
+<h2>Users</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Email</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
   <%= for user <- @users do %>
     <tr>
-      <td><%= user.email %><td>
-      <td><%= user.activated %><td>
-      <td><%= link "Podgląd", to: admin_user_path(@conn, :show, user.id) %><td>
+      <td><%= user.id %></td>
+      <td><%= user.email %></td>
+      <td><input type=checkbox value=<%= user.activated %> disabled></td>
+      <td class="text-right">
+        <span><%= link "Show", to: admin_user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: admin_user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: admin_user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
     </tr>
-  <% end %>
+    <% end %>
+  </tbody>
 </table>
+
+<span><%= link "New user", to: admin_user_path(@conn, :new) %></span>
