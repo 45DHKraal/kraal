@@ -6,6 +6,7 @@ defmodule Kraal.Accounts.User do
   schema "accounts_users" do
     field :email, :string
     field :password_hash, :string
+    field :password, :string, virtual: true
     field :activated, :boolean
     embeds_one :roles, Kraal.Accounts.Roles
 

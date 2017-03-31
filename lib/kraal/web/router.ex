@@ -27,13 +27,13 @@ defmodule Kraal.Web.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    get "/activate/:token/:user", ProfileController, :activate
-
-    scope "/profile" do
-      get "/", ProfileController, :show
-      get "/edit", ProfileController, :edit
-      post "/edit", ProfileController, :update
+    scope "/activate/:token_id/:user_id" do
+      get "/", ProfileController, :validate_activation_token
+      post "/", ProfileController, :activate_account
     end
+
+
+    resources "/profile", ProfileController, singleton: true
   end
 
   scope "/admin", Kraal.Web.Admin, as: :admin do

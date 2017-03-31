@@ -1,0 +1,2 @@
+<%= render "form.html", changeset: @changeset,
+                        action: profile_path(@conn, :activate_account, @token.id, @token.user_id) %>

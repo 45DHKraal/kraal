@@ -48,6 +48,14 @@ exports.config = {
     babel: {
       // Do not use ES6 compiler in vendor code
       ignore: [/vendor/]
+    },
+    sass: {
+      mode: "native", // This is the important part!,
+      options:{
+        includePaths: [
+          'node_modules/foundation-sites/scss'
+        ]
+      }
     }
   },
 

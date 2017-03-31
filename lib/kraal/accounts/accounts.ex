@@ -5,6 +5,7 @@ defmodule Kraal.Accounts do
 
   import Ecto.{Query, Changeset}, warn: false
   alias Kraal.Repo
+  require Logger
 
   alias Kraal.Accounts.User
   alias Kraal.Accounts.Roles
@@ -59,10 +60,18 @@ defmodule Kraal.Accounts do
         end)
     case Repo.transaction(multi) do
       {:ok, result} ->
+        Logger.debug fn -> {
+            "User with email #{result.user.email} created. Created activation token #{result.activation_token.id}",
+            [user: result.user, activation_token: result.activation_token.id]
+          } end
         Kraal.Emails.activation_email(result.activation_token, result.user)
         |> Kraal.Mailer.deliver_now
         {:ok, result.user}
-      {:error, _elem, changeset, %{}} ->
+      {:error, elem, changeset, %{}} ->
+        Logger.error fn -> {
+           "Problems during registration",
+           [elem: elem, changeset: changeset]
+          } end
         {:error, changeset}
     end
   end
@@ -120,7 +129,7 @@ defmodule Kraal.Accounts do
 
   defp user_changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [])
+    |> cast(attrs, [:email, :password])
     |> cast_embed(:roles)
     |> validate_required([])
   end
@@ -164,6 +173,16 @@ defmodule Kraal.Accounts do
   """
   def get_activation_token!(id), do: Repo.get!(ActivationToken, id)
 
+
+  def validate_activation_token(activation_token_id, user_id) do
+    require IEx
+    case get_activation_token!(activation_token_id) do
+      token = %ActivationToken{user_id: ^user_id} ->
+        {:ok, token}
+      _ ->
+        {:error, :not_valid}
+    end
+  end
   @doc """
   Creates a activation_token.
 

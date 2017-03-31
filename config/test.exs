@@ -17,3 +17,6 @@ config :kraal, Kraal.Repo,
   database: "kraal_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+  config :kraal, Kraal.Mailer,
+    adapter: Bamboo.TestAdapter

@@ -1,5 +1,6 @@
 defmodule Kraal.Web.Admin.UserController do
   use Kraal.Web, :controller
+  require Logger
 
   alias Kraal.Accounts
 
@@ -40,6 +41,10 @@ defmodule Kraal.Web.Admin.UserController do
 
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
+        Logger.info fn -> {
+          "Admin changes to user: #{user.id}",
+          [changes: user.changes]
+        } end
         conn
         |> put_flash(:info, "<%= schema.human_singular %> updated successfully.")
         |> redirect(to: admin_user_path(conn, :show, user))
@@ -51,7 +56,7 @@ defmodule Kraal.Web.Admin.UserController do
   def delete(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     {:ok, _user} = Accounts.delete_user(user)
-
+    Logger.warn("User #{id} removed.")
     conn
     |> put_flash(:info, "<%= schema.human_singular %> deleted successfully.")
     |> redirect(to: admin_user_path(conn, :index))
