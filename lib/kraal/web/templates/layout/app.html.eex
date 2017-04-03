@@ -15,6 +15,7 @@
     <header class="row">
       <h1 class="colums"><%= gettext "Title" %></h1>
       <h2 class="colums"><%= gettext "Subtitle" %></h2>
+      <%= render_nav(@conn) %>
       <nav role="navigation">
         <ul>
           <li><%= gettext "Home page" %></li>

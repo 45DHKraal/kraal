@@ -7,6 +7,7 @@ defmodule Kraal.Web.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Kraal.Web.Plugs.Auth
   end
 
   pipeline :api do
@@ -18,8 +19,12 @@ defmodule Kraal.Web.Router do
     plug Guardian.Plug.LoadResource
   end
 
+  pipeline :authenticated do
+    plug Guardian.Plug.EnsureAuthenticated, handler: Kraal.Web.Handler
+  end
+
   pipeline :admin do
-    plug Kraal.Plugs.Admin
+    plug Kraal.Web.Plugs.Admin
     plug :put_layout, {Kraal.Web.LayoutView, "admin.html"}
   end
 
@@ -27,13 +32,22 @@ defmodule Kraal.Web.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+
+    scope "/login" do
+        get "/", SessionController, :new
+        post "/", SessionController, :create
+    end
+
     scope "/activate/:token_id/:user_id" do
       get "/", ProfileController, :validate_activation_token
       post "/", ProfileController, :activate_account
     end
+  end
 
 
-    resources "/profile", ProfileController, singleton: true
+  scope "/", Kraal.Web do
+    pipe_through [:browser, :browser_session, :authenticated]
+    resources "/profile", ProfileController, singleton: true, only: [:show, :edit]
   end
 
   scope "/admin", Kraal.Web.Admin, as: :admin do

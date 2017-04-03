@@ -1,2 +1,18 @@
-<%= render "form.html", changeset: @changeset,
-                        action: profile_path(@conn, :activate_account, @token.id, @token.user_id) %>
+<%= form_for @changeset, profile_path(@conn, :activate_account, @token.id, @token.user_id), fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+
+  <div class="form-group">
+    <%= label f, :password, class: "control-label" %>
+    <%= password_input f, :password %>
+    <%= error_tag f, :password %>
+    <%= label f, :password_confirmation, class: "control-label" %>
+    <%= password_input f, :password_confirmation %>
+    <%= error_tag f, :password_confirmation %>
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

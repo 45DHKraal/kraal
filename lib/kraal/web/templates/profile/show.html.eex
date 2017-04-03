@@ -1,0 +1,2 @@
+<h2><%= gettext "My profile" %></h2>
+<h3><%= gettext "Email: %{email}", [email: @user.email] %></h3>

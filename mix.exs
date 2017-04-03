@@ -17,7 +17,7 @@ defmodule Kraal.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Kraal.Application, []},
-     extra_applications: [:logger, :bamboo, :runtime_tools]]
+     extra_applications: [:logger, :bamboo, :comeonin, :runtime_tools]]
   end
 
   # Specifies which paths to compile per environment.
@@ -34,9 +34,11 @@ defmodule Kraal.Mixfile do
      {:postgrex, ">= 0.0.0"},
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:credo, "~> 0.7", only: [:dev, :test]},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:guardian, github: "ueberauth/guardian"},
+     {:comeonin, "~> 3.0"},
      {:bamboo, "~> 0.8"}
    ]
   end

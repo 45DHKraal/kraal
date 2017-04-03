@@ -57,3 +57,6 @@ config :kraal, Kraal.Repo,
   hostname: "localhost",
   port: 32768,
   pool_size: 10
+
+config :guardian, Guardian,
+    secret_key: "VerySecretKey"

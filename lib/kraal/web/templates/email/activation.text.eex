@@ -1,0 +1,1 @@
+Link do aktywacji konta <%= profile_url(Kraal.Web.Endpoint,  :validate_activation_token, @activation_token, @user) %>

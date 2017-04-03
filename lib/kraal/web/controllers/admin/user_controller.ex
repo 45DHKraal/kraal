@@ -41,10 +41,7 @@ defmodule Kraal.Web.Admin.UserController do
 
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
-        Logger.info fn -> {
-          "Admin changes to user: #{user.id}",
-          [changes: user.changes]
-        } end
+        Logger.info "Admin changes to user: #{user.id}"
         conn
         |> put_flash(:info, "<%= schema.human_singular %> updated successfully.")
         |> redirect(to: admin_user_path(conn, :show, user))

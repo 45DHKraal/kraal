@@ -16,7 +16,7 @@ defmodule Kraal.Repo.Migrations.CreateKraal.Accounts do
 
     create table(:accounts_activation_tokens, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :user_id, references(:accounts_users, type: :binary_id)
+      add :user_id, references(:accounts_users, type: :binary_id, on_delete: :delete_all)
 
       timestamps()
     end

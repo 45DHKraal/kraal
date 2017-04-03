@@ -1,13 +1,19 @@
 defmodule Kraal.Emails do
-  import Bamboo.Email
-  import Bamboo.Phoenix
+  use Bamboo.Phoenix, view: Kraal.Web.EmailView
 
   def activation_email(activation_token, user) do
-    Bamboo.Email.new_email
+    base_email
     |> to(user.email)
-    |> from("test@kraal.pl")
     |> subject("Aktywacja konta")
-    |> text_body("test")
+    |> assign(:activation_token, activation_token)
+    |> assign(:user, user)
+    |> render(:activation)
+  end
+
+  defp base_email do
+    new_email
+    |> from("45 Drużyna Harcerzy Kraal <kontakt@kraal.pl>")
+    |> put_html_layout({Kraal.Web.LayoutView, "email.html"})
   end
 
 end

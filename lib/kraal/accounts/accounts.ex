@@ -3,8 +3,10 @@ defmodule Kraal.Accounts do
   The boundary for the Accounts system.
   """
 
-  import Ecto.{Query, Changeset}, warn: false
+  import Ecto.{Query, Changeset, Multi}, warn: false
+  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
   alias Kraal.Repo
+  alias Ecto.Multi
   require Logger
 
   alias Kraal.Accounts.User
@@ -53,9 +55,9 @@ defmodule Kraal.Accounts do
   """
   def create_user(attrs \\ %{}) do
     multi =
-      Ecto.Multi.new
-      |> Ecto.Multi.insert(:user, user_create_changeset(%User{}, attrs))
-      |> Ecto.Multi.run(:activation_token, fn %{user: user} ->
+      Multi.new
+      |> Multi.insert(:user, user_create_changeset(%User{}, attrs))
+      |> Multi.run(:activation_token, fn %{user: user} ->
           create_activation_token(user)
         end)
     case Repo.transaction(multi) do
@@ -76,8 +78,24 @@ defmodule Kraal.Accounts do
     end
   end
 
-  def activate_user(activation_token_id, user_id) do
+  def activate_user(activation_token_id, user_id, user_data) do
+    activation_token = get_activation_token!(activation_token_id)
+    user = get_user!(user_id)
+    |> user_activate_changeset(user_data)
+    multi = Multi.new
+    |> Multi.update(:user_update, user)
+    |> Multi.delete(:delete_activation_token, activation_token)
 
+    case Repo.transaction multi do
+      {:ok, result} ->
+        {:ok, result.user_update}
+        {:error, elem, changeset, %{}} ->
+          Logger.error fn -> {
+             "Problems during activation",
+             [elem: elem, changeset: changeset]
+            } end
+          {:error, changeset}
+    end
   end
 
   @doc """
@@ -98,6 +116,20 @@ defmodule Kraal.Accounts do
     |> Repo.update()
   end
 
+
+  def authenticate_user(email, password) do
+    user = Repo.get_by(User, email: email)
+
+    cond do
+      nil == user ->
+        dummy_checkpw
+        {:error, change_user(%User{})}
+      user.activated == false ->
+          {:error, :user_not_activated}
+      user && checkpw(password, user.password_hash) ->
+        {:ok, user}
+    end
+  end
   @doc """
   Deletes a User.
 
@@ -142,6 +174,24 @@ defmodule Kraal.Accounts do
     |> unique_constraint(:email)
   end
 
+  defp user_activate_changeset(%User{} = user, attrs) do
+    user
+    |> cast(attrs, [:password])
+    |> validate_required([:password])
+    |> validate_confirmation(:password)
+    |> put_change(:activated, true)
+    |> put_pass_hash
+  end
+
+  defp put_pass_hash(changeset) do
+    case changeset do
+      %Ecto.Changeset{ valid?: true, changes: %{password: pass}} ->
+        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(pass))
+      _ ->
+        changeset
+    end
+  end
+
   alias Kraal.Accounts.ActivationToken
 
   @doc """
@@ -175,12 +225,15 @@ defmodule Kraal.Accounts do
 
 
   def validate_activation_token(activation_token_id, user_id) do
-    require IEx
-    case get_activation_token!(activation_token_id) do
-      token = %ActivationToken{user_id: ^user_id} ->
-        {:ok, token}
-      _ ->
-        {:error, :not_valid}
+    try do
+      case get_activation_token!(activation_token_id) do
+        token = %ActivationToken{user_id: ^user_id} ->
+          {:ok, token}
+        nil ->
+          {:error, :not_valid}
+      end
+    rescue
+      _ -> {:error, :not_found}
     end
   end
   @doc """
@@ -202,23 +255,6 @@ defmodule Kraal.Accounts do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a activation_token.
-
-  ## Examples
-
-      iex> update_activation_token(activation_token, %{field: new_value})
-      {:ok, %ActivationToken{}}
-
-      iex> update_activation_token(activation_token, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_activation_token(%ActivationToken{} = activation_token, attrs) do
-    activation_token
-    |> activation_token_changeset(attrs)
-    |> Repo.update()
-  end
 
   @doc """
   Deletes a ActivationToken.
@@ -253,4 +289,5 @@ defmodule Kraal.Accounts do
     activation_token
     |> cast(attrs, [])
   end
+
 end
