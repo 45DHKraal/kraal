@@ -12,9 +12,9 @@ config :logger, level: :warn
 # Configure your database
 config :kraal, Kraal.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "kraal_test",
+  username: System.get_env("DATABASE_POSTGRESQL_USERNAME"),
+  password: System.get_env("DATABASE_POSTGRESQL_PASSWORD"),
+  database: System.get_env("DATABASE_POSTGRESQL_USERNAME"),
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

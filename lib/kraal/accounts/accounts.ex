@@ -68,7 +68,7 @@ defmodule Kraal.Accounts do
           } end
         Kraal.Emails.activation_email(result.activation_token, result.user)
         |> Kraal.Mailer.deliver_now
-        {:ok, result.user}
+        {:ok, result.user, result.activation_token}
       {:error, elem, changeset, %{}} ->
         Logger.error fn -> {
            "Problems during registration",
@@ -80,7 +80,8 @@ defmodule Kraal.Accounts do
 
   def activate_user(activation_token_id, user_id, user_data) do
     activation_token = get_activation_token!(activation_token_id)
-    user = get_user!(user_id)
+    user = user_id
+    |> get_user!
     |> user_activate_changeset(user_data)
     multi = Multi.new
     |> Multi.update(:user_update, user)
@@ -89,13 +90,15 @@ defmodule Kraal.Accounts do
     case Repo.transaction multi do
       {:ok, result} ->
         {:ok, result.user_update}
-        {:error, elem, changeset, %{}} ->
-          Logger.error fn -> {
-             "Problems during activation",
-             [elem: elem, changeset: changeset]
-            } end
-          {:error, changeset}
+      {:error, elem, changeset, %{}} ->
+        Logger.error fn -> {
+           "Problems during activation",
+           [elem: elem, changeset: changeset]
+          } end
+        {:error, changeset}
     end
+    rescue
+      _ -> {:error, :not_valid}
   end
 
   @doc """
@@ -122,7 +125,7 @@ defmodule Kraal.Accounts do
 
     cond do
       nil == user ->
-        dummy_checkpw
+        dummy_checkpw()
         {:error, change_user(%User{})}
       user.activated == false ->
           {:error, :user_not_activated}
@@ -163,12 +166,14 @@ defmodule Kraal.Accounts do
     user
     |> cast(attrs, [:email, :password])
     |> cast_embed(:roles)
+    |> validate_required([:email])
     |> validate_required([])
   end
 
   defp user_create_changeset(%User{} = user, attrs) do
     user
     |> cast(attrs, [:email])
+    |> put_change(:activated, false)
     |> put_embed(:roles, Roles.changeset(%Roles{}, attrs))
     |> validate_required([:email])
     |> unique_constraint(:email)
@@ -186,26 +191,15 @@ defmodule Kraal.Accounts do
   defp put_pass_hash(changeset) do
     case changeset do
       %Ecto.Changeset{ valid?: true, changes: %{password: pass}} ->
-        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(pass))
+        changeset
+        |> put_change(:password_hash, Comeonin.Bcrypt.hashpwsalt(pass))
+        |> put_change(:password, nil)
       _ ->
         changeset
     end
   end
 
   alias Kraal.Accounts.ActivationToken
-
-  @doc """
-  Returns the list of activation_tokens.
-
-  ## Examples
-
-      iex> list_activation_tokens()
-      [%ActivationToken{}, ...]
-
-  """
-  def list_activation_tokens do
-    Repo.all(ActivationToken)
-  end
 
   @doc """
   Gets a single activation_token.
@@ -223,6 +217,9 @@ defmodule Kraal.Accounts do
   """
   def get_activation_token!(id), do: Repo.get!(ActivationToken, id)
 
+  def get_activation_token_for_user!(id) do
+    Repo.get_by!(ActivationToken, [user_id: id])
+  end
 
   def validate_activation_token(activation_token_id, user_id) do
     try do
