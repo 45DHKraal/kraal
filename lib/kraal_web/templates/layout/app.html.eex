@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Hello Kraal!</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  </head>
+
+  <body>
+      <nav class="nav">
+        
+      </nav>
+      <header class="header">
+        <div class="hero-body">
+          <h1 class="title" >45 Drużyna Harcerzy Kraal</h1>
+          <h2 class="subtitle">Stąpamy lekko po matce ziemi</h2>
+        </div>
+      </header>
+
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+      <main role="main" class="section">
+        <%= render @view_module, @view_template, assigns %>
+      </main>
+      <footer class="footer">
+      </footer>
+
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>
