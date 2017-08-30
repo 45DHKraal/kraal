@@ -10,6 +10,7 @@ defmodule Kraal.Coherence.User do
 
   schema "users" do
     field :email, :string
+    has_one :profile, Kraal.Accounts.Profile
     coherence_schema()
 
     timestamps()

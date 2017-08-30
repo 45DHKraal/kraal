@@ -6,7 +6,8 @@ var isProduction = (env === 'prod')
 
 module.exports = {
   entry: {
-    'app': ['./js/app.js', './css/app.scss']
+    'app': ['./js/app.js', './css/app.scss'],
+    'admin' : ['./js/admin.js', './css/admin.scss']
   },
 
   output: {
@@ -51,6 +52,9 @@ module.exports = {
 
   plugins: [
     new CopyWebpackPlugin([{ from: './static' }]),
-    new ExtractTextPlugin('css/app.css')
+    new ExtractTextPlugin({filename:  (getPath) => {
+      return getPath('css/[name].css').replace('css/js', 'css');
+    },
+    allChunks: true})
   ]
 }

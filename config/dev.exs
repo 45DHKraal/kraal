@@ -55,7 +55,6 @@ config :kraal, Kraal.Repo,
   password: "postgres",
   database: "kraal_dev",
   hostname: "localhost",
-  port:     32771,
   pool_size: 10
 
 config :coherence, KraalWeb.Coherence.Mailer,

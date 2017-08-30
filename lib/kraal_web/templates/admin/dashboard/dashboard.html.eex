@@ -1,0 +1,23 @@
+<div class="columns is-mobile is-multiline">
+  <div class="column is-one-third-desktop is-full-mobile">
+  </div>
+  <div class="column is-one-third-desktop is-full-mobile">
+  </div>
+  <div class="column is-half-desktop is-full-mobile">
+    <section class="panel">
+      <p class="panel-heading">
+       Notifications
+     </p>
+     <div class="panel-block">
+       <%= for {id, is_warning, message }  <- assigns[:notifications] do %>
+       <div class="notification <%=if is_warning, do: "is-warning"%>">
+         <button class="delete" onclick="((this).parentNode.remove())"></button>
+         <strong><%= message %></strong>
+         <br>
+         <small>1h ago | via: system</small>
+       </div>
+       <% end %>
+    </div>
+  </section>
+</div>
+</div>

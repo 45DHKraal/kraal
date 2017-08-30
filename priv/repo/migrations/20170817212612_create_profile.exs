@@ -5,6 +5,11 @@ defmodule Kraal.Repo.Migrations.CreateProfile do
     create table(:profile, primary_key: false) do
       add :id, :binary_id, primary_key: true
 
+      add :first_name, :string
+      add :last_name, :string
+      add :birth_date, :date
+
+      add :user_id, references(:users, on_delete: :nothing, type: :uuid)
       timestamps()
     end
 

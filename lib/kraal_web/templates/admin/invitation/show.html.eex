@@ -1,0 +1,8 @@
+<h2>Show Invitation</h2>
+
+<ul>
+
+</ul>
+
+<span><%= link "Edit", to: admin_invitation_path(@conn, :edit, @invitation) %></span>
+<span><%= link "Back", to: admin_invitation_path(@conn, :index) %></span>

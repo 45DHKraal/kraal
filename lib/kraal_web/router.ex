@@ -11,10 +11,9 @@ defmodule KraalWeb.Router do
     plug Coherence.Authentication.Session
   end
 
-  # Add this block
-  scope "/" do
-    pipe_through :browser
-    coherence_routes()
+  pipeline :admin do
+    # plug Kraal.Web.Plugs.Admin
+    plug :put_layout, {KraalWeb.Admin.LayoutView, "admin.html"}
   end
 
   pipeline :api do
@@ -25,6 +24,17 @@ defmodule KraalWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+
+    coherence_routes()
+  end
+
+  scope "/admin", KraalWeb.Admin, as: :admin do
+    pipe_through [:browser, :admin]
+
+    get "/", DashboardController, :index
+    resources "/users", UserController
+    get "/invitations/resend", InvitationController, :resend
+    resources "/invitations", InvitationController, only: [:index, :new, :create, :delete]
   end
 
   # Other scopes may use custom stacks.

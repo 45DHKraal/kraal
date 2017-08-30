@@ -1,0 +1,17 @@
+defmodule Kraal.Repo.Migrations.CreatePosts do
+  use Ecto.Migration
+
+  def change do
+    create table(:posts, primary_key: false) do
+      add :id, :binary_id, primary_key: true
+      add :title, :string
+      add :content, :text
+      add :published, :boolean, default: false, null: false
+      add :published_at, :utc_datetime
+      add :slug, :string
+
+      timestamps()
+    end
+
+  end
+end

@@ -41,7 +41,10 @@ defmodule Kraal.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:coherence, github: "smpallen99/coherence"}
+      {:coherence, github: "smpallen99/coherence"},
+      {:sweet_xml, "~> 0.6.5"},
+      {:ex_machina, "~> 2.0", only: :test},
+      {:faker_elixir_octopus, "~> 1.0.0",  only: [:dev, :test]}
     ]
   end
 

@@ -5,10 +5,10 @@ defmodule Kraal.Coherence.Invitation do
   use Ecto.Schema
   import Ecto.Changeset
 
-  
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  
+
 
   schema "invitations" do
     field :name, :string
