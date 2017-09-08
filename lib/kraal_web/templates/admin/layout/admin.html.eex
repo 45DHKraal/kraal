@@ -36,7 +36,7 @@
           </span>
           <div class="nav-right nav-menu is-hidden-tablet">
             <%= for item <- get_admin_link(@conn) do %>
-              <%= link item.name, to: item.path, class: "nav-item #{if item.active, do: "is-active"}"
+              <%= link item.name, to: item.path, class: "nav-item #{if item.active, do: "is-active"}" %>
             <% end %>
           </div>
         </div>

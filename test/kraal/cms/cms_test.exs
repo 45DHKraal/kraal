@@ -132,4 +132,72 @@ defmodule Kraal.CmsTest do
       assert %Ecto.Changeset{} = Cms.change_post(post)
     end
   end
+
+  describe "pages" do
+    alias Kraal.Cms.Page
+
+    @valid_attrs %{content: "some content", published: true, published_at: "2010-04-17 14:00:00.000000Z", slug: "some slug", title: "some title"}
+    @update_attrs %{content: "some updated content", published: false, published_at: "2011-05-18 15:01:01.000000Z", slug: "some updated slug", title: "some updated title"}
+    @invalid_attrs %{content: nil, published: nil, published_at: nil, slug: nil, title: nil}
+
+    def page_fixture(attrs \\ %{}) do
+      {:ok, page} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Cms.create_page()
+
+      page
+    end
+
+    test "list_pages/0 returns all pages" do
+      page = page_fixture()
+      assert Cms.list_pages() == [page]
+    end
+
+    test "get_page!/1 returns the page with given id" do
+      page = page_fixture()
+      assert Cms.get_page!(page.id) == page
+    end
+
+    test "create_page/1 with valid data creates a page" do
+      assert {:ok, %Page{} = page} = Cms.create_page(@valid_attrs)
+      assert page.content == "some content"
+      assert page.published == true
+      assert page.published_at == DateTime.from_naive!(~N[2010-04-17 14:00:00.000000Z], "Etc/UTC")
+      assert page.slug == "some slug"
+      assert page.title == "some title"
+    end
+
+    test "create_page/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Cms.create_page(@invalid_attrs)
+    end
+
+    test "update_page/2 with valid data updates the page" do
+      page = page_fixture()
+      assert {:ok, page} = Cms.update_page(page, @update_attrs)
+      assert %Page{} = page
+      assert page.content == "some updated content"
+      assert page.published == false
+      assert page.published_at == DateTime.from_naive!(~N[2011-05-18 15:01:01.000000Z], "Etc/UTC")
+      assert page.slug == "some updated slug"
+      assert page.title == "some updated title"
+    end
+
+    test "update_page/2 with invalid data returns error changeset" do
+      page = page_fixture()
+      assert {:error, %Ecto.Changeset{}} = Cms.update_page(page, @invalid_attrs)
+      assert page == Cms.get_page!(page.id)
+    end
+
+    test "delete_page/1 deletes the page" do
+      page = page_fixture()
+      assert {:ok, %Page{}} = Cms.delete_page(page)
+      assert_raise Ecto.NoResultsError, fn -> Cms.get_page!(page.id) end
+    end
+
+    test "change_page/1 returns a page changeset" do
+      page = page_fixture()
+      assert %Ecto.Changeset{} = Cms.change_page(page)
+    end
+  end
 end
