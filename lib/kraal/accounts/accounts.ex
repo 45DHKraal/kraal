@@ -7,6 +7,20 @@ defmodule Kraal.Accounts do
   alias Kraal.Repo
 
   alias Kraal.Accounts.Profile
+  alias Kraal.Accounts.User
+
+  def list_user do
+    Repo.all(User)
+  end
+
+  def register_user(attrs \\ %{}) do
+    %User{}
+    |> User.register_changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:profile, with: &Profile.changeset/2)
+    |> Repo.insert
+  end
+
+  def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
   Returns the list of profile.

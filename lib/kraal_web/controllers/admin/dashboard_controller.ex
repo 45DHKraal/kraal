@@ -5,16 +5,16 @@ defmodule KraalWeb.Admin.DashboardController do
     conn
     |> assign(:header_data, get_header_data())
     |> assign(:notifications, get_admin_notifications())
-    |> render "dashboard.html"
+    |> render("dashboard.html")
   end
+
 
   defp get_header_data do
-    [{"User", Kraal.Repo.aggregate(Kraal.Coherence.User, :count, :id)}]
+    [{"User", Kraal.Repo.aggregate(Kraal.Accounts.User, :count, :id)}]
   end
+
 
   defp get_admin_notifications do
-    [{1, false, "testtest"},
-    {2, true, "testtest"}]
+    [{1, false, "testtest"}, {2, true, "testtest"}]
   end
-
 end

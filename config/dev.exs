@@ -57,5 +57,9 @@ config :kraal, Kraal.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :coherence, KraalWeb.Coherence.Mailer,
-  adapter: Swoosh.Adapters.Local
+config :kraal, Kraal.Mailer,
+  adapter: Bamboo.LocalAdapter  
+
+config :argon2_elixir,
+  t_cost: 2,
+  m_cost: 12

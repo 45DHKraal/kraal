@@ -12,6 +12,9 @@ defmodule Kraal.Cms.Post do
     field :published_at, :utc_datetime
     field :slug, :string
     field :title, :string
+    field :status, StatusEnum
+
+    belongs_to :author, Kraal.Accounts.User
 
     timestamps()
   end

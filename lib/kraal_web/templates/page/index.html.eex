@@ -1,1 +1,8 @@
-
+<section class='columns'>
+<%= for post <- @posts do %>
+<div class='tile is-4'>
+  <h1><%= post.title %></h1>
+  <h2><%= post.author.profile.first_name %></h2>
+</div>
+<% end %>
+</section>

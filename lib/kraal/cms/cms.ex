@@ -37,6 +37,17 @@ defmodule Kraal.Cms do
   """
   def get_post!(id), do: Repo.get!(Post, id)
 
+  def get_posts(page \\ 0, size \\ 10) do
+    Post
+    |> join(:left, [p], _ in assoc(p, :author))
+    |> join(:left, [_, author], _ in assoc(author, :profile))
+    |>  preload([_, a, p], [author: {a, profile: p}])
+    |>  order_by(desc: :published_at)
+    |>  limit(^size)
+    |>  offset(^(page * size))
+    |> Repo.all
+  end
+
   @doc """
   Creates a post.
 

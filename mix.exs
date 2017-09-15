@@ -6,13 +6,14 @@ defmodule Kraal.Mixfile do
       app: :kraal,
       version: "0.0.1",
       elixir: "~> 1.4",
-      elixirc_paths: elixirc_paths(Mix.env),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers,
-      start_permanent: Mix.env == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
     ]
   end
+
 
   # Configuration for the OTP application.
   #
@@ -20,13 +21,20 @@ defmodule Kraal.Mixfile do
   def application do
     [
       mod: {Kraal.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :bamboo],
     ]
   end
 
+
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(:test) do
+    ["lib", "test/support"]
+  end
+
+  defp elixirc_paths(_) do
+    ["lib"]
+  end
+
 
   # Specifies your project dependencies.
   #
@@ -39,15 +47,21 @@ defmodule Kraal.Mixfile do
       {:ecto_autoslug_field, "~> 0.3"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:phoenix_live_reload, "~> 1.0", [only: :dev]},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:coherence, github: "smpallen99/coherence"},
+      {:guardian, "~> 1.0-beta"},
       {:sweet_xml, "~> 0.6.5"},
-      {:ex_machina, "~> 2.0", only: :test},
-      {:faker_elixir_octopus, "~> 1.0.0",  only: [:dev, :test]}
+      {:ex_machina, "~> 2.0", [only: :test]},
+      {:faker_elixir_octopus, "~> 1.0.0", [only: [:dev, :test]]},
+      {:credo, "~> 0.8", [only: [:dev, :test], runtime: false]},
+      {:ecto_enum, "~> 1.0"},
+      {:bamboo, "~> 1.0-rc1"},
+      {:comeonin, "~> 4.0"},
+      {:argon2_elixir, "~> 1.2"},
     ]
   end
+
 
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to create, migrate and run the seeds file at once:
@@ -59,7 +73,7 @@ defmodule Kraal.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
     ]
   end
 end

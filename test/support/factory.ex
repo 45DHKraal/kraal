@@ -1,6 +1,10 @@
 defmodule Kraal.Factory do
   use ExMachina.Ecto, repo: Kraal.Repo
 
+  def user_factory do
+    %Kraal.Accounts.User{}
+  end
+
   def profile_factory do
     %Kraal.Accounts.Profile{
       first_name: FakerElixir.Name.first_name,
