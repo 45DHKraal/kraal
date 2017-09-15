@@ -1,0 +1,17 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: circleci/elixir:1.5
+      - image: circleci/postgres:9.6-alpine
+        env:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_DB=kraal_test
+    working_directory: ~/circleci-demo-elixir-phoenix
+    steps:
+      - checkout
+      - run: mix local.rebar --force
+      - run: mix local.hex --force
+      - run: mix deps.get
+      - run: mix test
