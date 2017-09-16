@@ -59,7 +59,7 @@ defmodule Kraal.Mixfile do
       {:bamboo, "~> 1.0-rc1"},
       {:comeonin, "~> 4.0"},
       {:argon2_elixir, "~> 1.2"},
-      {:junit_formatter, "~> 1.3", only: [:test]}
+      {:junit_formatter, "~> 2.0", only: [:test]}
     ]
   end
 
