@@ -17,4 +17,7 @@ defmodule Kraal.Factory do
     build(:profile, %{first_name: "", last_name: "", birth_date: ""})
   end
 
+  def post_factory do
+  end
+
 end

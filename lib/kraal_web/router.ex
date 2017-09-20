@@ -19,6 +19,7 @@ defmodule KraalWeb.Router do
     pipe_through :browser
     # Use the default browser stack
     get "/", PageController, :index
+    resources "/posts", PostController, only: [:index, :show], param: "slug"
   end
   scope "/admin", KraalWeb.Admin, as: :admin do
     pipe_through [:browser, :admin]

@@ -20,7 +20,6 @@ defmodule Kraal.Accounts.User do
     field :confirmed_at, Ecto.DateTime
     field :confirmation_sent_at, Ecto.DateTime
     has_one :profile, Kraal.Accounts.Profile
-    has_many :posts, Kraal.Cms.Post
     timestamps()
   end
 

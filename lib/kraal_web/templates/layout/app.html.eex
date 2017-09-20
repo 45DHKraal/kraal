@@ -12,8 +12,9 @@
   </head>
 
   <body>
+    <div class="container">
       <nav class="nav">
-        
+
       </nav>
       <header class="header">
         <div class="hero-body">
@@ -26,8 +27,11 @@
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
       <main role="main" class="section">
-        <%= render @view_module, @view_template, assigns %>
+        <div class="container is-fluid">
+          <%= render @view_module, @view_template, assigns %>
+        </div>
       </main>
+    </div>
       <footer class="footer">
       </footer>
 

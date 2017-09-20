@@ -39,6 +39,7 @@ defmodule KraalWeb do
 
       import KraalWeb.Router.Helpers
       import KraalWeb.ErrorHelpers
+      import KraalWeb.MarkdownHelpers
       import KraalWeb.Gettext
     end
   end

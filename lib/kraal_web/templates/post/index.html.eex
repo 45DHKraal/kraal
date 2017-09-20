@@ -1,0 +1,22 @@
+<h2>Listing Posts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for post <- @page do %>
+    <tr>
+
+      <td class="text-right">
+        <span><%= link "Show", to: post_path(@conn, :show, post.slug), class: "btn btn-default btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= pagination_links @page %>

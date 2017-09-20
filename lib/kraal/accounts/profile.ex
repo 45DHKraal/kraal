@@ -7,11 +7,12 @@ defmodule Kraal.Accounts.Profile do
 
   @primary_key {:id, :binary_id, [autogenerate: true]}
   @foreign_key_type :binary_id
-  schema "profile" do
+  schema "profiles" do
     field :first_name, :string
     field :last_name, :string
     field :birth_date, :date
     belongs_to :user, Kraal.Accounts.User
+    has_many :posts, Kraal.Cms.Post
     timestamps()
   end
 

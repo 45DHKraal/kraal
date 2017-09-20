@@ -2,7 +2,7 @@ defmodule Kraal.Repo.Migrations.CreateProfile do
   use Ecto.Migration
 
   def change do
-    create table(:profile, primary_key: false) do
+    create table(:profiles, primary_key: false) do
       add :id, :binary_id, primary_key: true
 
       add :first_name, :string

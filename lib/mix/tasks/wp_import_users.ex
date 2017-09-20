@@ -18,6 +18,10 @@ defmodule Mix.Tasks.WpImport.Users do
       |> parse(namespace_conformant: true)
       |> xpath(~x(//channel/wp:author)l)
       |> Enum.map(fn user ->
+          profile = %{
+            first_name: xpath(user, ~x[//wp:author_first_name/text()]s),
+            last_name: xpath(user, ~x[//wp:author_last_name/text()]s),
+          }
                     password =
                       :crypto.strong_rand_bytes(16)
                       |> Base.encode64()
@@ -40,7 +44,7 @@ defmodule Mix.Tasks.WpImport.Users do
                                      active: false,
                                    })
                     |> Kraal.Repo.insert!()
-                    |> Ecto.build_assoc(:profile)
+                    |> Ecto.build_assoc(:profile, profile)
                     |> Kraal.Repo.insert!()
 
                   end)

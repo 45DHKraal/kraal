@@ -37,15 +37,25 @@ defmodule Kraal.Cms do
   """
   def get_post!(id), do: Repo.get!(Post, id)
 
-  def get_posts(page \\ 0, size \\ 10) do
+  def get_post_by_slug!(slug), do: Repo.get_by!(Post, slug: slug)
+
+  def get_posts_page(page \\ 1) do
     Post
+    |> order_by(desc: :published_at)
+    |> with_author
+    |> only_published
+    |> Repo.paginate(page: page)
+  end
+
+  defp with_author(query) do
+    query
     |> join(:left, [p], _ in assoc(p, :author))
-    |> join(:left, [_, author], _ in assoc(author, :profile))
-    |>  preload([_, a, p], [author: {a, profile: p}])
-    |>  order_by(desc: :published_at)
-    |>  limit(^size)
-    |>  offset(^(page * size))
-    |> Repo.all
+    |> preload([_, a], author: a )
+  end
+
+  defp only_published(query) do
+    query
+    |> where(status: ^:publish)
   end
 
   @doc """

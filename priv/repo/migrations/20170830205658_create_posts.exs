@@ -7,15 +7,16 @@ defmodule Kraal.Repo.Migrations.CreatePosts do
       add :id, :binary_id, primary_key: true
       add :title, :string
       add :content, :text
-      add :published, :boolean, default: true, null: false
       add :published_at, :utc_datetime, default: fragment("now()")
       add :slug, :string
       add :status, :status
 
-      add :author_id, references(:users, on_delete: :nothing, type: :uuid)
+      add :author_id, references(:profiles, on_delete: :nothing, type: :uuid)
 
       timestamps()
     end
+
+    create unique_index(:posts, [:slug])
 
   end
 end

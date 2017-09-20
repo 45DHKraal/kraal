@@ -1,0 +1,58 @@
+<section class="hero is-primary is-medium">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <h1 class="title is-2">
+        <%= @post.title %>
+      </h1>
+      <!-- <h2 class="subtitle is-4">
+        Blog post subtitle
+      </h2> -->
+    </div>
+  </div>
+</section>
+
+<article class="section blog">
+  <div class="container">
+    <div class="columns is-mobile">
+      <div class="column is-8 is-offset-2">
+        <div class="content blog-post section">
+          <p class="has-text-right has-text-muted">published 2 days ago</p>
+          <%= markdown(@post.content) %>
+        </div>
+        <div class="card is-fullwidth">
+          <header class="card-header">
+            <p class="card-header-title">
+              About the author
+            </p>
+            <a class="card-header-icon" href="#top">
+              <i class="fa fa-angle-up"></i>
+            </a>
+          </header>
+          <div class="card-content">
+            <article class="media">
+              <div class="media-left">
+                <figure class="image is-64x64">
+                  <img src="http://placehold.it/128x128" alt="Image">
+                </figure>
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    <strong>John Smith</strong> <small>@johnsmith</small>
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <footer class="card-footer">
+            <a class="card-footer-item">Share on Facebook</a>
+            <a class="card-footer-item">Share on Twitter</a>
+            <a class="card-footer-item">Share on G+</a>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<span><%= link "Back", to: post_path(@conn, :index) %></span>
