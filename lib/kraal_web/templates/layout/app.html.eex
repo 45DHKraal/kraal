@@ -1,40 +1,53 @@
 <!DOCTYPE html>
-<html lang="pl">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Hello Kraal!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-  </head>
-
-  <body>
-    <div class="container">
-      <nav class="nav">
-
-      </nav>
-      <header class="header">
-        <div class="hero-body">
-          <h1 class="title" >45 Drużyna Harcerzy Kraal</h1>
-          <h2 class="subtitle">Stąpamy lekko po matce ziemi</h2>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skeleton - Free Bulma template</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+</head>
+<body>
+  <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <%= link "Brand", to: page_path(@conn, :index), class: "navbar-item" %>
+      </div>
+      <span class="navbar-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+      <div class="navbar-end navbar-menu">
+        <a class="navbar-item is-tab is-active">
+          Home
+        </a>
+        <a class="navbar-item is-tab">
+          Features
+        </a>
+        <a class="navbar-item is-tab">
+          Team
+        </a>
+        <a class="navbar-item is-tab">
+          Help
+        </a>
+        <div class="navbar-item">
+          <div class="field is-grouped">
+            <div class="control">
+              <%= link "Log in",  to: session_path(@conn, :new), class: "button" %>
+              </div>
+              <div class="control">
+              <%= link "Sign up",  to: registration_path(@conn, :new), class: "button is-info" %>
+            </div>
+          </div>
         </div>
-      </header>
-
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-
-      <main role="main" class="section">
-        <div class="container is-fluid">
-          <%= render @view_module, @view_template, assigns %>
-        </div>
-      </main>
+      </div>
+  </nav>
+  <section class="section">
+    <div class="container content">
+      <%= render @view_module, @view_template, assigns %>
     </div>
-      <footer class="footer">
-      </footer>
-
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-  </body>
+  </section>
+  <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+</body>
 </html>

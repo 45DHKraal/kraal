@@ -6,6 +6,7 @@ defmodule Kraal.Repo.Migrations.CreateUser do
       add :id, :binary_id, primary_key: true
       add :email, :string
       add :password_hash, :string
+      add :roles, :map
       add :active, :boolean, null: false, default: true
       add :reset_password_token, :string
       add :reset_password_sent_at, :utc_datetime

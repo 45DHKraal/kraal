@@ -1,0 +1,5 @@
+<h2>Edit Post</h2>
+
+<%= render "form.html", Map.put(assigns, :action, panel_post_path(@conn, :update, @post)) %>
+
+<span><%= link "Back", to: panel_post_path(@conn, :index) %></span>

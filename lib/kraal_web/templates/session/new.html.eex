@@ -1,0 +1,40 @@
+<div class="column is-8 is-offset-2">
+  <%= form_for @changeset, session_path(@conn, :create), [class: "login-form"], fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% end %>
+
+    <p class="control has-icon has-icon-right">
+      <%= text_input f, :email, class: "input email-input", placeholder: "Email" %>
+      <span class="icon user">
+        <i class="fa fa-user"></i>
+      </span>
+    </p>
+    <p class="control has-icon has-icon-right">
+      <%= password_input f, :password, class: "input password-input", placeholder: "Password" %>
+      <span class="icon user">
+        <i class="fa fa-lock"></i>
+      </span>
+    </p>
+    <p class="control login">
+      <%= submit "Login", class: "button is-success is-outlined is-large is-fullwidth" %>
+    </p>
+
+    <div class="section forgot-password">
+      <p class="has-text-centered">
+        <%= link "Back", to: page_path(@conn, :index) %>
+        <a href="#">Need help?</a>
+      </p>
+    </div>
+  <% end %>
+  <h1 class="avatar has-text-centered section">
+    <img src="https://placehold.it/128x128">
+  </h1>
+  <div class="login-form">
+
+
+  </div>
+
+</div>

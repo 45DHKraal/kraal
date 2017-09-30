@@ -20,6 +20,11 @@ defmodule Kraal.Accounts.User do
     field :confirmed_at, Ecto.DateTime
     field :confirmation_sent_at, Ecto.DateTime
     has_one :profile, Kraal.Accounts.Profile
+    embeds_one :roles, Roles do
+      field :admin, :boolean, default: false
+      field :cms_admin, :boolean, default: false
+      field :active_scout, :boolean, default: false
+    end
     timestamps()
   end
 
@@ -33,9 +38,10 @@ defmodule Kraal.Accounts.User do
   def register_changeset(%User{} = user, attrs) do
     user
     |> cast(attrs, [:email, :password, :password_confirmation])
+    |> cast_embed(:roles, with: &roles_changeset/2)
     |> validate_required([:email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 5)
+    |> validate_length(:password, min: 6)
     |> validate_confirmation(:password, required: true)
     |> unique_constraint(:email)
     |> generate_confirmation_token()
@@ -43,15 +49,45 @@ defmodule Kraal.Accounts.User do
   end
 
   def generate_password_hash(changeset) do
-    password = get_change(changeset, :password)
-    changeset
-    |> put_change(:password_hash, Comeonin.Argon2.hashpwsalt(password))
+    case changeset.valid? do
+      true -> password = get_change(changeset, :password)
+              changeset
+              |> put_change(:password_hash, Comeonin.Argon2.hashpwsalt(password))
+      _ -> changeset
+    end
   end
 
   def generate_confirmation_token(changeset) do
-    email = get_change(changeset, :email)
-    changeset
-    |> put_change(:confirmation_token, Comeonin.Argon2.hashpwsalt(email))
+    case changeset.valid? do
+      true -> email = get_change(changeset, :email)
+              changeset
+              |> put_change(:confirmation_token, Comeonin.Argon2.hashpwsalt(email))
+        _ -> changeset
+    end
+
+  end
+
+  def check_password(%User{} = user, password) do
+    Comeonin.Argon2.check_pass(user, password)
+  end
+
+  def is_active(%User{} = user) do
+    case user.active do
+      true -> {:ok, user}
+      _ -> {:error, :not_active}
+    end
+  end
+
+  def is_confirmed(%User{} = user) do
+    case is_nil(user.confirmed_at) do
+      true -> {:error, :not_confirmed}
+      _ -> {:ok, user}
+    end
+  end
+
+  defp roles_changeset(schema, params) do
+    schema
+    |> cast(params, [:admin, :cms_admin, :active_scout])
   end
 
 end

@@ -11,7 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 alias Kraal.Accounts.User
 
-User.changeset(%User{}, %{email: "test@kraal.pl", password: "test"})
+User.register_changeset(%User{}, %{email: "test@kraal.pl", password: "kraal45", password_confirmation: "kraal45", roles: %{admin: true}})
 |> Kraal.Repo.insert!()
 |> Ecto.build_assoc(:profile,
                     first_name: "Test",

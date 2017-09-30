@@ -49,4 +49,108 @@ defmodule Kraal.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_profile(profile)
     end
   end
+
+  describe "user" do
+    alias Kraal.Accounts.User
+
+    test "change_user/1 returns a user changeset" do
+      user = build(:user)
+      assert %Ecto.Changeset{} = Accounts.change_user(user)
+    end
+
+    test "list_user/0 returns all user" do
+      users = insert_list( 5, :user)
+      assert Accounts.list_user() == users
+    end
+
+    test "register_user/1 create new user" do
+      user_params = string_params_for(:user_register)
+      assert {:ok, %User{} = user} = Accounts.register_user(user_params)
+      refute is_nil user.password_hash
+      refute is_nil user.confirmation_token
+    end
+
+    test "register_user/1 require email" do
+      user_params = string_params_for(:user_register, %{email: ""})
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.register_user(user_params)
+      assert %{email: ["can't be blank"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+    test "register_user/1 require password" do
+      user_params = string_params_for(:user_register, %{password: "", password_confirmation: ""})
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.register_user(user_params)
+      assert %{password: ["can't be blank"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+    test "register_user/1 password must match" do
+      user_params = string_params_for(:user_register, %{password_confirmation: FakerElixir.Internet.password(:weak)})
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.register_user(user_params)
+      assert %{password_confirmation: ["does not match confirmation"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+    test "register_user/1 email has be uniq" do
+      email = FakerElixir.Internet.email
+      insert(:user, %{email: email})
+      user_params = string_params_for(:user_register, %{email: email})
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.register_user(user_params)
+      assert %{email: ["has already been taken"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+    test "login/2 should return user with profile for success" do
+      email = FakerElixir.Internet.email
+      password = FakerElixir.Internet.password(:normal)
+      build(:user, %{email: email, password: password})
+      |> user_hash_password
+      |> user_confirm
+      |> user_activate
+      |> insert
+      user_params = string_params_for(:user_login, %{email: email, password: password})
+      assert {:ok, %User{email: ^email}} = Accounts.login(user_params)
+    end
+
+    test "login/2 should return error for not active user" do
+      email = FakerElixir.Internet.email
+      password = FakerElixir.Internet.password(:normal)
+      build(:user, %{email: email, password: password})
+      |> user_hash_password
+      |> user_confirm
+      |> insert
+      user_params = string_params_for(:user_login, %{email: email, password: password})
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.login(user_params)
+      assert %{user: ["not activated"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+    test "login/2 should return error for not confirmed user" do
+      email = FakerElixir.Internet.email
+      password = FakerElixir.Internet.password(:normal)
+      build(:user_login, %{email: email, password: password})
+      |> user_hash_password
+      |> insert
+      user_params = string_params_for(:user_login, %{email: email, password: password})
+      assert  {:error,%Ecto.Changeset{} = changeset} = Accounts.login(user_params)
+      assert %{user: ["not confirmed"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+    test "login/2 should return error for wrong password" do
+      email = FakerElixir.Internet.email
+      password = FakerElixir.Internet.password(:normal)
+      build(:user_login, %{email: email})
+      |> user_hash_password
+      |> user_confirm
+      |> user_activate
+      |> insert
+      user_params = string_params_for(:user_login, %{email: email, password: password})
+      assert  {:error, %Ecto.Changeset{} = changeset} = Accounts.login(user_params)
+      assert %{user: ["invalid password"]} = errors_on(changeset)
+      refute changeset.valid?
+    end
+
+
+  end
 end

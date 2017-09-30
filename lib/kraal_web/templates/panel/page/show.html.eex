@@ -1,0 +1,8 @@
+<h2>Show Page</h2>
+
+<ul>
+
+</ul>
+
+<span><%= link "Edit", to: panel_page_path(@conn, :edit, @page) %></span>
+<span><%= link "Back", to: panel_page_path(@conn, :index) %></span>

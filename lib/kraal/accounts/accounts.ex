@@ -2,7 +2,6 @@ defmodule Kraal.Accounts do
   @moduledoc """
   The Accounts context.
   """
-
   import Ecto.Query, warn: false
   alias Kraal.Repo
 
@@ -20,7 +19,64 @@ defmodule Kraal.Accounts do
     |> Repo.insert
   end
 
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+  User
+  |> where(id: ^id)
+  |> join(:left, [p], _ in assoc(p, :profile))
+  |> preload([_, p], profile: p)
+  |> Repo.one!
+end
+
+  def get_user_by_email(email) do
+    User
+    |> where(email: ^email)
+    |> preload(:profile)
+    |> Repo.one!
+  end
+
+  def login(%{"email"=> email, "password"=>password} \\ %{}) do
+    changeset = change_user(%User{password: password, email: email})
+    case login(email, password) do
+      {:ok, user} -> {:ok, user}
+      {_, error} ->
+        {:error, changeset |> Ecto.Changeset.add_error(:user, get_login_error_message(error))}
+        _ -> {:error, changeset |> Ecto.Changeset.add_error(:user, get_login_error_message())}
+    end
+  end
+
+  defp login(email, password) do
+    try do
+      with user <- get_user_by_email(email),
+        {:ok, _} <- User.is_confirmed(user),
+        {:ok, _} <- User.is_active(user),
+        {:ok, _} <- User.check_password(user, password)
+      do
+        {:ok, user}
+      else
+        {:error, error} -> {:error, error}
+      end
+    rescue
+      error ->  Comeonin.Argon2.dummy_checkpw()
+                {:error, error}
+    end
+  end
+
+  defp get_login_error_message(error \\ nil) do
+    case error do
+      "invalid password" -> "invalid password"
+      :not_active -> "not activated"
+      :not_confirmed -> "not confirmed"
+      _ -> "Login error"
+    end
+  end
+
+  def logout(params) do
+
+  end
+
+  def change_user(%User{} = user) do
+    User.changeset(user, %{})
+  end
 
   @doc """
   Returns the list of profile.
