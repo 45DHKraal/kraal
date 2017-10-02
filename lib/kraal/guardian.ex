@@ -4,7 +4,6 @@ defmodule Kraal.Guardian do
   alias Kraal.Accounts
   alias Kraal.Accounts.User
 
-  require IEx
   def subject_for_token(%User{} = user, _claims) do
     {:ok, "User:" <> to_string(user.id)}
   end

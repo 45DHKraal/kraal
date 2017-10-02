@@ -3,8 +3,6 @@ defmodule KraalWeb.Plugs.RoleChecker do
 
   alias Kraal.Accounts.User
 
-  require IEx
-
   def init(opts), do: opts
 
   def call(conn, opts \\ [only: [:active_scout]]) do
