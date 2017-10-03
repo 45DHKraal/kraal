@@ -7,8 +7,6 @@ defmodule Kraal.GuardianTest do
   import Kraal.Factory
   import FakerElixir.Internet
 
-  require IEx
-
   @user_data %{email: email(), password: password(:normal)}
 
   describe("#subject_for_token for %User{} given") do
@@ -64,8 +62,6 @@ end
   def create_user(_params) do
     user = build(:user, %{email: @user_data.email, password: @user_data.password})
     |> user_hash_password
-    |> user_confirm
-    |> user_activate
     |> insert
     {:ok, user: Kraal.Accounts.get_user!(user.id)}
   end

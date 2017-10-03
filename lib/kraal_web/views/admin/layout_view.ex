@@ -1,8 +1,6 @@
 defmodule KraalWeb.Admin.LayoutView do
   use KraalWeb, :view
 
-  require IEx
-
   @routes [
     {gettext("Dashboard"), {:admin_dashboard_path, :index}, "home"},
     {gettext("User"), {:admin_user_path, :index}, "user"},

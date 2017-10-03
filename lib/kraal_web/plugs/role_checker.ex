@@ -6,7 +6,7 @@ defmodule KraalWeb.Plugs.RoleChecker do
   def init(opts), do: opts
 
   def call(conn, opts \\ [only: [:active_scout]]) do
-    %Kraal.Accounts.User{:roles => roles} = Guardian.Plug.current_resource(conn)
+    %User{roles: roles} = Guardian.Plug.current_resource(conn)
      if verify_user_roles(roles, opts) do
        conn
      else

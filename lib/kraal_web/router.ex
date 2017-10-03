@@ -22,7 +22,7 @@ defmodule KraalWeb.Router do
 
   pipeline :panel do
     plug Guardian.Plug.EnsureAuthenticated
-    plug :put_layout, {KraalWeb.Admin.LayoutView, "panel.html"}
+    plug :put_layout, {KraalWeb.Panel.LayoutView, "panel.html"}
   end
   pipeline :api do
     plug :accepts, ["json"]

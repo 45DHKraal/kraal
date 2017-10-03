@@ -30,6 +30,7 @@ end
   def get_user_by_email(email) do
     User
     |> where(email: ^email)
+    |> where([u], is_nil(u.deleted_at))
     |> preload(:profile)
     |> Repo.one!
   end
@@ -39,39 +40,23 @@ end
     case login(email, password) do
       {:ok, user} -> {:ok, user}
       {_, error} ->
-        {:error, changeset |> Ecto.Changeset.add_error(:user, get_login_error_message(error))}
-        _ -> {:error, changeset |> Ecto.Changeset.add_error(:user, get_login_error_message())}
+        {:error, Ecto.Changeset.add_error(changeset, :user, error)}
     end
   end
 
   defp login(email, password) do
-    try do
-      with user <- get_user_by_email(email),
-        {:ok, _} <- User.is_confirmed(user),
-        {:ok, _} <- User.is_active(user),
-        {:ok, _} <- User.check_password(user, password)
-      do
-        {:ok, user}
-      else
-        {:error, error} -> {:error, error}
-      end
+    with user <- get_user_by_email(email),
+      {:ok, _} <- User.is_confirmed(user),
+      {:ok, _} <- User.check_password(user, password)
+    do
+      {:ok, user}
+    else
+      {:error, error} -> {:error, error}
+    end
     rescue
-      error ->  Comeonin.Argon2.dummy_checkpw()
-                {:error, error}
-    end
-  end
-
-  defp get_login_error_message(error \\ nil) do
-    case error do
-      "invalid password" -> "invalid password"
-      :not_active -> "not activated"
-      :not_confirmed -> "not confirmed"
-      _ -> "Login error"
-    end
-  end
-
-  def logout(params) do
-
+      error ->
+        Comeonin.Argon2.dummy_checkpw()
+        {:error, "not exist"}
   end
 
   def change_user(%User{} = user) do
@@ -108,24 +93,6 @@ end
   def get_profile!(id), do: Repo.get!(Profile, id)
 
   @doc """
-  Creates a profile.
-
-  ## Examples
-
-      iex> create_profile(%{field: value})
-      {:ok, %Profile{}}
-
-      iex> create_profile(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_profile(attrs \\ %{}) do
-    %Profile{}
-    |> Profile.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
   Updates a profile.
 
   ## Examples
@@ -141,22 +108,6 @@ end
     profile
     |> Profile.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Profile.
-
-  ## Examples
-
-      iex> delete_profile(profile)
-      {:ok, %Profile{}}
-
-      iex> delete_profile(profile)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_profile(%Profile{} = profile) do
-    Repo.delete(profile)
   end
 
   @doc """

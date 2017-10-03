@@ -1,19 +1,18 @@
 defmodule KraalWeb.Admin.UserControllerTest do
-  use KraalWeb.ConnCase
+  use KraalWeb.ConnCase, user: :admin
 
-  alias Kraal.Admin
+  alias Kraal.Accounts
 
-  @create_attrs %{}
+  import Kraal.Factory
+
+  @moduletag user: :admin
+
   @update_attrs %{}
   @invalid_attrs %{}
 
-  def fixture(:user) do
-    {:ok, user} = Admin.create_user(@create_attrs)
-    user
-  end
-
   describe "index" do
     test "lists all users", %{conn: conn} do
+      insert_list(10, :user)
       conn = get conn, admin_user_path(conn, :index)
       assert html_response(conn, 200) =~ "Listing Users"
     end
@@ -28,7 +27,8 @@ defmodule KraalWeb.Admin.UserControllerTest do
 
   describe "create user" do
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post conn, admin_user_path(conn, :create), user: @create_attrs
+
+      conn = post conn, admin_user_path(conn, :create), user: string_params_for(:user_register)
 
       assert %{id: id} = redirected_params(conn)
       assert redirected_to(conn) == admin_user_path(conn, :show, id)
@@ -82,7 +82,10 @@ defmodule KraalWeb.Admin.UserControllerTest do
   end
 
   defp create_user(_) do
-    user = fixture(:user)
+    user = build(:user)
+    |> user_hash_password
+    |> insert
+
     {:ok, user: user}
   end
 end

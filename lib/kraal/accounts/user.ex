@@ -13,12 +13,12 @@ defmodule Kraal.Accounts.User do
     field :current_password, :string, virtual: true
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
-    field :active, :boolean, default: false
     field :reset_password_token, :string
     field :reset_password_sent_at, Ecto.DateTime
     field :confirmation_token, :string
     field :confirmed_at, Ecto.DateTime
     field :confirmation_sent_at, Ecto.DateTime
+    field :deleted_at, Ecto.DateTime
     has_one :profile, Kraal.Accounts.Profile
     embeds_one :roles, Roles do
       field :admin, :boolean, default: false
@@ -31,7 +31,7 @@ defmodule Kraal.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :active])
+    |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
   end
 
@@ -71,16 +71,9 @@ defmodule Kraal.Accounts.User do
     Comeonin.Argon2.check_pass(user, password)
   end
 
-  def is_active(%User{} = user) do
-    case user.active do
-      true -> {:ok, user}
-      _ -> {:error, :not_active}
-    end
-  end
-
   def is_confirmed(%User{} = user) do
     case is_nil(user.confirmed_at) do
-      true -> {:error, :not_confirmed}
+      true -> {:error, "not confirmed"}
       _ -> {:ok, user}
     end
   end

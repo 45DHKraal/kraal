@@ -3,6 +3,8 @@ defmodule KraalWeb.Panel.PageControllerTest do
 
   alias Kraal.Cms
 
+  @moduletag user: :cms_admin
+
   @create_attrs %{}
   @update_attrs %{}
   @invalid_attrs %{}

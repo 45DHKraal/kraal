@@ -7,12 +7,12 @@ defmodule Kraal.Repo.Migrations.CreateUser do
       add :email, :string
       add :password_hash, :string
       add :roles, :map
-      add :active, :boolean, null: false, default: true
       add :reset_password_token, :string
       add :reset_password_sent_at, :utc_datetime
       add :confirmation_token, :string
       add :confirmed_at, :utc_datetime
       add :confirmation_sent_at, :utc_datetime
+      add :deleted_at, :utc_datetime
       timestamps()
     end
     create unique_index(:users, [:email])

@@ -1,8 +1,6 @@
 defmodule KraalWeb.SessionControllerTest do
   use KraalWeb.ConnCase
 
-  alias Kraal.Accounts
-
   import Kraal.Factory
   import FakerElixir.Internet
 
@@ -36,8 +34,6 @@ defmodule KraalWeb.SessionControllerTest do
     def create_valid_user(_params) do
       user = build(:user, %{email: @user_data.email, password: @user_data.password})
       |> user_hash_password
-      |> user_confirm
-      |> user_activate
       |> insert
       {:ok, user: user}
     end

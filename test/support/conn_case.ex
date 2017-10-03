@@ -15,6 +15,8 @@ defmodule KraalWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Kraal.Factory
+
   using do
     quote do
       # Import conveniences for testing with connections
@@ -26,13 +28,28 @@ defmodule KraalWeb.ConnCase do
     end
   end
 
-
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Kraal.Repo)
+    conn = if tags[:user] do
+      add_user(Phoenix.ConnTest.build_conn(), tags[:user])
+    else
+      Phoenix.ConnTest.build_conn()
+    end
+
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(Kraal.Repo, {:shared, self()})
     end
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    {:ok, conn: conn}
+  end
+
+  def add_user(conn, true) do
+    Kraal.Guardian.Plug.sign_in(conn, Kraal.Factory.build(:user))
+  end
+
+  def add_user(conn, type) do
+    user = Kraal.Factory.build(:user)
+    |> Kraal.Factory.user_add_role(type)
+    Kraal.Guardian.Plug.sign_in(conn, user)
   end
 
 end

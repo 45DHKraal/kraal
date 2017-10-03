@@ -13,16 +13,15 @@ defmodule Kraal.Guardian do
   end
 
   def resource_from_claims(%{"sub" => "User:" <> uid_str}) do
-    try do
-      case Ecto.UUID.cast(uid_str) do
-        {:ok, uid} ->
-          {:ok, Accounts.get_user!(uid)}
-        _ ->
-          {:error, :invalid_id}
-      end
-    rescue
-      Ecto.NoResultsError -> {:error, :no_result}
+    case Ecto.UUID.cast(uid_str) do
+      {:ok, uid} ->
+        {:ok, Accounts.get_user!(uid)}
+      _ ->
+        {:error, :invalid_id}
     end
+    rescue
+      Ecto.NoResultsError ->
+        {:error, :no_result}
   end
 
   def resource_from_claims(_claims) do
