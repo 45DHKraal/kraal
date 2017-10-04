@@ -35,6 +35,12 @@ end
     |> Repo.one!
   end
 
+  def delete_user(user) do
+    change_user(user)
+    |> Ecto.Changeset.put_change(:deleted_at, DateTime.utc_now())
+    |> Repo.update
+  end
+
   def login(%{"email"=> email, "password"=>password} \\ %{}) do
     changeset = change_user(%User{password: password, email: email})
     case login(email, password) do

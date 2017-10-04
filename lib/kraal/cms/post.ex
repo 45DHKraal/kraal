@@ -11,7 +11,7 @@ defmodule Kraal.Cms.Post do
     field :published_at, :utc_datetime
     field :slug, :string
     field :title, :string
-    field :status, StatusEnum
+    field :status, Kraal.Cms.StatusEnum
 
     belongs_to :author, Kraal.Accounts.Profile
 
@@ -22,18 +22,13 @@ defmodule Kraal.Cms.Post do
   def changeset(%Post{} = post, attrs) do
     post
     |> cast(attrs, [:title, :content, :published_at, :status, :author_id])
-    |> create_slug
     |> assoc_constraint(:author)
-    |> validate_required([:title, :content, :published_at,  :slug, :status])
+    |> validate_required([:title, :content, :published_at,  :status])
+    |> create_slug
     |> unique_constraint(:slug)
   end
 
-  defp create_slug(changeset) do
-    title = get_change(changeset, :title)
-      |> Slugger.slugify_downcase
-    %DateTime{:year=> year, :month=> month} = get_change(changeset, :published_at)
-
-
-    put_change(changeset, :slug, "/#{year}/#{month}/#{title}")
+  def create_slug(changeset) do
+    Slugify.slugify(changeset)
   end
 end

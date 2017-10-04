@@ -10,7 +10,7 @@ defmodule Kraal.Accounts.UserFactory do
       end
 
       def user_register_factory do
-        password = FakerElixir.Internet.password(:normal)
+        password = FakerElixir.Internet.password(:strong)
         %Kraal.Accounts.User{
           email: FakerElixir.Internet.email,
           password: password,
@@ -20,7 +20,7 @@ defmodule Kraal.Accounts.UserFactory do
 
       def user_login_factory do
         user_factory
-        |> Map.put(:password, FakerElixir.Internet.password(:normal))
+        |> Map.put(:password, FakerElixir.Internet.password(:strong))
         |> user_hash_password
       end
 

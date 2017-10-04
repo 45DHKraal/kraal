@@ -18,7 +18,7 @@ defmodule Kraal.Cms do
 
   """
   def list_posts do
-    Repo.all(Post)
+    Repo.all(with_author(Post))
   end
 
   @doc """
@@ -35,7 +35,11 @@ defmodule Kraal.Cms do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id) do
+    Post
+    |> with_author
+    |> Repo.get!( id)
+  end
 
   def get_post_by_slug!(slug), do: Repo.get_by!(Post, slug: slug)
 

@@ -4,6 +4,6 @@
 if System.get_env("CI") == true do
   ExUnit.configure formatters: [JUnitFormatter, ExUnit.CLIFormatter]
 end
-ExUnit.start()
+ExUnit.start(exclude: [:skip])
 
 Ecto.Adapters.SQL.Sandbox.mode(Kraal.Repo, :manual)

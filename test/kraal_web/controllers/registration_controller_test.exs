@@ -3,6 +3,8 @@ defmodule KraalWeb.RegistrationControllerTest do
 
   alias Kraal.Accounts
 
+  @moduletag :skip
+
   @create_attrs %{}
   @update_attrs %{}
   @invalid_attrs %{}

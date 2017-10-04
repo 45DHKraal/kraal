@@ -21,7 +21,7 @@ defmodule Kraal.Mixfile do
   def application do
     [
       mod: {Kraal.Application, []},
-      extra_applications: [:logger, :runtime_tools, :bamboo, :scrivener, :scrivener_ecto, :scrivener_html],
+      extra_applications: [:logger, :runtime_tools,:exnumerator, :bamboo, :scrivener, :scrivener_ecto, :scrivener_html],
     ]
   end
 
@@ -44,7 +44,7 @@ defmodule Kraal.Mixfile do
       {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
-      {:slugger, "~> 0.2"},
+      {:ecto_autoslug_field, "~> 0.3"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", [only: :dev]},
@@ -55,7 +55,7 @@ defmodule Kraal.Mixfile do
       {:ex_machina, "~> 2.0", [only: :test]},
       {:faker_elixir_octopus, "~> 1.0.0", [only: [:dev, :test]]},
       {:credo, "~> 0.8", [only: [:dev, :test], runtime: false]},
-      {:ecto_enum, "~> 1.0"},
+      {:exnumerator, "~> 1.2.1"},
       {:scrivener, "~> 2.3"},
       {:scrivener_ecto, "~> 1.2"},
       {:scrivener_html, "~> 1.7"},

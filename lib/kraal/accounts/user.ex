@@ -31,8 +31,8 @@ defmodule Kraal.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :password])
-    |> validate_required([:email, :password])
+    |> cast(attrs, [:email, :deleted_at, :confirmation_sent_at, :confirmed_at, :confirmation_token, :reset_password_sent_at])
+    |> validate_required([:email])
   end
 
   def register_changeset(%User{} = user, attrs) do

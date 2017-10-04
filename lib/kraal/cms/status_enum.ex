@@ -1,5 +1,4 @@
-import EctoEnum
-
-defenum StatusEnum,
-        :status,
-        [:publish, :pending, :draft, :auto_draft, :future, :private, :trash]
+defmodule Kraal.Cms.StatusEnum do
+  use Exnumerator,
+    values: [:publish, :pending, :draft, :auto_draft, :future, :private, :trash]
+end
