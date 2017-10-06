@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "build": "webpack -p",
     "watch": "webpack --watch-stdin --progress --color",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

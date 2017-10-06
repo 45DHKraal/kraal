@@ -1,5 +1,8 @@
 # Kraal
 
+[![CircleCI](https://circleci.com/gh/45DHKraal/kraal/tree/master.svg?style=svg)](https://circleci.com/gh/45DHKraal/kraal/tree/master)
+[![Build Status](https://semaphoreci.com/api/v1/kraal/kraal/branches/master/badge.svg)](https://semaphoreci.com/kraal/kraal)
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
