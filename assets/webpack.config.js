@@ -51,7 +51,10 @@ module.exports = {
   },
 
   plugins: [
-    new CopyWebpackPlugin([{ from: './static' }]),
+    new CopyWebpackPlugin([{
+        from: "./static",
+        to: path.resolve(__dirname, "../priv/static")
+      }]),
     new ExtractTextPlugin({filename:  (getPath) => {
       return getPath('css/[name].css').replace('css/js', 'css');
     },
