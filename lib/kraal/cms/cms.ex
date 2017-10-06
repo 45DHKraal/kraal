@@ -75,7 +75,7 @@ defmodule Kraal.Cms do
 
   """
   def create_post(attrs \\ %{}) do
-    %Post{}
+    Post
     |> Post.changeset(attrs)
     |> Repo.insert()
   end
